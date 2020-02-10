@@ -2,6 +2,7 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
+const server = require('./auth/server.js');
 
 const mongooseOptions = {
   useNewUrlParser: true,
@@ -10,4 +11,4 @@ const mongooseOptions = {
 };
 mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
 
-require('./auth/server.js').start(process.env.PORT || 3000);
+server.start(process.env.PORT || 3000);
