@@ -2,33 +2,42 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 let secret = 'yourdoghasfleas';
 
-let db = {};
-let users = {};
+const Users = mongoose.Schema({
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+});
 
 // mongo pre-save
-users.save = async function(record) {
-  if (!db[record.username]) {
-    record.password = await bcrypt.hash(record.password, 5);
-    db[record.username] = record;
-    return record;
-  }
-  return Promise.reject();
-};
+Users.pre('save', async function() {
+  this.password = await bcrypt.hash(this.password, 5);
+});
 
-users.generateToken = function(user) {
+// anything.methods.whatever === instance method
+Users.methods.generateToken = function() {
+  // Use the user stuff (this) to make a token.
   let userObject = {
-    username: user.username,
+    username: this.username,
   };
-
-  let token = jwt.sign(userObject, secret);
-  return token;
+  return jwt.sign(userObject, secret);
 };
 
-users.authenticateBasic = async function(username, password) {
-  let valid = await bcrypt.compare(password, db[username].password);
-  return valid ? Promise.resolve(db[username]) : Promise.reject();
+// anything.statics.whatever === static or class method
+Users.statics.authenticateBasic = async function(username, password) {
+  let query = { username };
+  let user = await this.findOne(query);
+  if (user) {
+    let isValid = bcrypt.compare(password, user.password);
+    if (isValid) {
+      return user;
+    } else {
+      throw 'Invalid User';
+    }
+  } else {
+    throw 'Invalid User';
+  }
 };
-module.exports = users;
+module.exports = mongoose.model('users', Users);

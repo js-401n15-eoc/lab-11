@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 const mongooseOptions = {
   useNewUrlParser: true,
   useCreateIndex: true,
+  useUnifiedTopology: true,
 };
 mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
 
-require('./lib/server.js').start(process.env.PORT || 3000);
+require('./auth/server.js').start(process.env.PORT || 3000);
