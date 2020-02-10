@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-let secret = 'yourdoghasfleas';
+let secret = 'thisislab11bbq';
 
 const Users = mongoose.Schema({
   username: { type: String, required: true },
@@ -15,15 +15,6 @@ const Users = mongoose.Schema({
 Users.pre('save', async function() {
   this.password = await bcrypt.hash(this.password, 5);
 });
-
-// anything.methods.whatever === instance method
-Users.methods.generateToken = function() {
-  // Use the user stuff (this) to make a token.
-  let userObject = {
-    username: this.username,
-  };
-  return jwt.sign(userObject, secret);
-};
 
 // anything.statics.whatever === static or class method
 Users.statics.authenticateBasic = async function(username, password) {
@@ -40,4 +31,14 @@ Users.statics.authenticateBasic = async function(username, password) {
     throw 'Invalid User';
   }
 };
+
+// anything.methods.whatever === instance method
+Users.methods.generateToken = function() {
+  // Use the user stuff (this) to make a token.
+  let userObject = {
+    username: this.username,
+  };
+  return jwt.sign(userObject, secret);
+};
+
 module.exports = mongoose.model('users', Users);
