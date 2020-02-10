@@ -8,12 +8,13 @@ module.exports = (req, res, next) => {
     next('invalid login');
     return;
   }
-  let basic = req.headers.authorization(' ').pop();
+
+  let basic = req.headers.authorization.split(' ').pop();
   let [user, password] = base64.decode(basic).split(':');
 
   Users.authenticateBasic(user, password)
     .then(validUser => {
-      req.token = validUser.generateToken(validUser);
+      req.token = validUser.generateToken();
       next();
     })
     .catch(err => next(`Invalid Login! ${err}`));

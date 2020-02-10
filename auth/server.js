@@ -19,7 +19,7 @@ app.post('/signin', basicAuth, signinRoute);
 app.get('/users', basicAuth, getUsersRoute);
 
 module.exports = {
-  server: app,
+  authServer: app,
   start: port =>
     app.listen(port, () => console.log(`listening on port ${port}`)),
 };
