@@ -18,10 +18,12 @@
 #### Configuring MongoDB
 
 - create an .env file on the top level of this repo defining the following variables:
+
 ```
 MONGODB_URI=mongodb://localhost:27017/lab-11
 PORT=3000
 ```
+
 - start your database with the path of the DB along with the folder location for your DB files (`mongod --dbpath=/Users/path/to/data/db`: i.e. `"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" --dbpath="D:\db"`)
 
 #### Tests
@@ -30,4 +32,4 @@ PORT=3000
 
 #### UML
 
-![UML Image](lab-11-UML.png 'uml diagram')
+![UML Image](lab-11-UML.png "uml diagram")

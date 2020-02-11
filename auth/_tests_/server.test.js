@@ -37,10 +37,12 @@ describe('auth server', () => {
     const autHeader = base64.encode(
       `${signinObj.username}:${signinObj.password}`,
     );
+
     return agent
       .post('/signin')
       .set('authorization', `Basic ${autHeader}`)
       .then(response => {
+        expect(!!response.text).toEqual(true);
         expect(response.statusCode).toBe(200);
       });
   });
@@ -73,7 +75,6 @@ describe('auth server', () => {
     await user2.save(signinObj2);
 
     return agent.get('/users').then(response => {
-      console.log(response.statusCode);
       expect(response.statusCode).toEqual(403);
       expect(response.body).toEqual({});
     });
